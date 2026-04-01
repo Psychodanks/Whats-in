@@ -1,0 +1,470 @@
+            <!-- Role selection modal -->
+            <div id="role-select-modal" class="modal" hidden>
+                <div class="modal-backdrop"></div>
+                <div class="modal-content">
+                    <h3>Select your role</h3>
+                    <p>How will you use this app?</p>
+                    <div class="role-select-btn-row">
+                        <button id="role-select-parent" class="role-select-btn" type="button">Parent / Adult</button>
+                        <button id="role-select-child" class="role-select-btn" type="button">Child</button>
+                    </div>
+                    <button id="role-select-cancel" type="button" class="modal-cancel-btn" style="width:100%;margin-top:16px;">Cancel</button>
+                </div>
+            </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="What's in? – Track what's in your fridge, freezer and cupboard">
+    <meta name="theme-color" content="#2d7a3a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="What's in?">
+    <title>What's in?</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Home Screen -->
+    <div id="home-screen" class="screen">
+
+        <header class="app-header">
+            <button id="layout-back-btn" type="button" aria-label="Back to zones menu" title="Back to zones menu" hidden>&larr; Back</button>
+            <button id="edit-zones-btn" type="button" aria-label="App options" title="App options">&#8942;</button>
+            <button id="install-app-btn" type="button" aria-label="Install app" title="Install app" hidden>Install App</button>
+        </header>
+
+        <div id="install-top-banner" class="install-top-banner" hidden>
+            <span>Install for full features</span>
+        </div>
+
+        <main class="home-main">
+            <section id="kitchen-stage" aria-label="Interactive kitchen">
+                <img class="kitchen-photo" src="assets/images/kitchen.png" >
+                <button class="kitchen-hotspot" type="button" data-hotspot="fridge-door" data-name="Fridge" aria-label="Fridge area">
+                    <span class="hotspot-meta" id="meta-fridge-door"></span>
+                    <div class="resize-handle" aria-hidden="true"></div>
+                </button>
+                <button class="kitchen-hotspot" type="button" data-hotspot="top-cupboards" data-name="Top cupboards" aria-label="Top cupboards area">
+                    <span class="hotspot-meta" id="meta-top-cupboards"></span>
+                    <div class="resize-handle" aria-hidden="true"></div>
+                </button>
+                <button class="kitchen-hotspot" type="button" data-hotspot="bottom-cupboards" data-name="Bottom cupboards" aria-label="Bottom cupboards area">
+                    <span class="hotspot-meta" id="meta-bottom-cupboards"></span>
+                    <div class="resize-handle" aria-hidden="true"></div>
+                </button>
+            </section>
+
+            <section id="subsection-panel" hidden aria-label="Selected area list">
+                <div class="subsection-header">
+                    <h2 id="subsection-title">Area</h2>
+                    <div class="subsection-actions">
+                        <button id="use-item-header-btn" type="button" aria-label="Use item" title="Use item">Use</button>
+                        <button id="scan-receipt-btn" type="button" aria-label="Scan receipt" title="Scan receipt">📷</button>
+                        <input id="receipt-file-input" type="file" accept="image/*" capture="environment" style="display:none" aria-hidden="true">
+                        <button id="toggle-add-item-btn" type="button" aria-label="Add item options" title="Add item">+</button>
+                        <button id="subsection-close" type="button" aria-label="Close list">✕</button>
+                    </div>
+                </div>
+                <div id="add-item-form" class="add-item-form" autocomplete="off" autocapitalize="off" spellcheck="false" data-lpignore="true" hidden>
+                    <div class="form-grid">
+                        <label class="form-field">
+                            <span>Item</span>
+                            <input id="item-name" name="stock-item-name" type="text" placeholder="Type to search..." autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" required>
+                            <div id="item-suggestions" class="item-suggestions" hidden></div>
+                        </label>
+                        <label class="form-field">
+                            <span>Quantity</span>
+                            <select id="item-qty" name="stock-item-qty" autocomplete="off" required>
+                                <option value="">Select qty</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="8">8</option>
+                                <option value="10">10</option>
+                                <option value="12">12</option>
+                                <option value="24">24</option>
+                            </select>
+                        </label>
+                        <label class="form-field">
+                            <span>Weight/volume (optional)</span>
+                            <select id="item-weight" name="stock-item-weight" autocomplete="off">
+                                <option value="">No weight/volume</option>
+                                <option value="50g">50g</option>
+                                <option value="100g">100g</option>
+                                <option value="150g">150g</option>
+                                <option value="200g">200g</option>
+                                <option value="250g">250g</option>
+                                <option value="300g">300g</option>
+                                <option value="350g">350g</option>
+                                <option value="400g">400g</option>
+                                <option value="500g">500g</option>
+                                <option value="600g">600g</option>
+                                <option value="700g">700g</option>
+                                <option value="750g">750g</option>
+                                <option value="800g">800g</option>
+                                <option value="900g">900g</option>
+                                <option value="1kg">1kg</option>
+                                <option value="1.25kg">1.25kg</option>
+                                <option value="1.5kg">1.5kg</option>
+                                <option value="1.75kg">1.75kg</option>
+                                <option value="2kg">2kg</option>
+                                <option value="2.5kg">2.5kg</option>
+                                <option value="3kg">3kg</option>
+                                <option value="50ml">50ml</option>
+                                <option value="100ml">100ml</option>
+                                <option value="150ml">150ml</option>
+                                <option value="200ml">200ml</option>
+                                <option value="250ml">250ml</option>
+                                <option value="330ml">330ml</option>
+                                <option value="400ml">400ml</option>
+                                <option value="500ml">500ml</option>
+                                <option value="568ml">568ml</option>
+                                <option value="750ml">750ml</option>
+                                <option value="1 pint">1 pint</option>
+                                <option value="1.5 pints">1.5 pints</option>
+                                <option value="2 pints">2 pints</option>
+                                <option value="3 pints">3 pints</option>
+                                <option value="4 pints">4 pints</option>
+                                <option value="5 pints">5 pints</option>
+                                <option value="6 pints">6 pints</option>
+                                <option value="1L">1L</option>
+                                <option value="1.25L">1.25L</option>
+                                <option value="1.5L">1.5L</option>
+                                <option value="1.75L">1.75L</option>
+                                <option value="2L">2L</option>
+                                <option value="2.5L">2.5L</option>
+                                <option value="3L">3L</option>
+                            </select>
+                        </label>
+                        <label class="form-field">
+                            <span>Pack size (optional)</span>
+                            <select id="item-pack" name="stock-item-pack" autocomplete="off">
+                                <option value="">No pack size</option>
+                                <option value="Single">Single</option>
+                                <option value="2 pack">2 pack</option>
+                                <option value="4 pack">4 pack</option>
+                                <option value="6 pack">6 pack</option>
+                                <option value="8 pack">8 pack</option>
+                                <option value="10 pack">10 pack</option>
+                                <option value="12 pack">12 pack</option>
+                                <option value="Family pack">Family pack</option>
+                                <option value="Bulk pack">Bulk pack</option>
+                            </select>
+                        </label>
+                        <label class="form-field form-field-wide">
+                            <span>BBE date (optional)</span>
+                            <input id="item-bbe" name="stock-item-bbe" type="date" autocomplete="off" inputmode="none" autocorrect="off" spellcheck="false">
+                        </label>
+                    </div>
+                    <div class="form-actions">
+                        <button id="add-item-btn" type="button">Add item</button>
+                        <button id="cancel-edit-btn" type="button" hidden>Cancel</button>
+                        <button id="move-item-btn" type="button" hidden>Move item</button>
+                        <button id="remove-item-btn" type="button" hidden>Remove item</button>
+                    </div>
+                </div>
+                <div id="list-container"></div>
+                <p id="empty-list-msg" hidden>
+                    Nothing here yet.
+                </p>
+            </section>
+
+            <!-- Move item modal -->
+            <div id="move-item-modal" class="modal" hidden>
+                <div class="modal-backdrop"></div>
+                <div class="modal-content">
+                    <h3>Move item to:</h3>
+                    <div id="move-item-zones" class="move-zones"></div>
+                    <button id="move-item-cancel" type="button" class="modal-cancel-btn">Cancel</button>
+                </div>
+            </div>
+
+            <div id="options-panel" class="modal" hidden>
+                <div class="modal-backdrop"></div>
+                <div class="modal-content options-content">
+                    <div class="options-layout">
+                        <div class="options-sidebar" role="tablist" aria-label="Options sections">
+                            <button class="options-nav-item active" id="options-nav-zones-btn" type="button">Appliances &amp; Zones</button>
+                            <button class="options-nav-item" id="options-nav-cloud-btn" type="button">Cloud</button>
+                            <button class="options-nav-item" id="options-nav-share-btn" type="button">Share app</button>
+                        </div>
+
+                        <div class="options-main">
+                            <div id="options-pane-zones" class="options-tab-pane">
+                                <p class="options-pane-hint">Add or rearrange appliances and storage zones on your kitchen view.</p>
+                                <div class="options-action-row">
+                                    <button id="options-edit-btn" type="button" class="scan-secondary-btn" style="flex:1">Edit layout</button>
+                                    <button id="options-add-zone-btn" type="button" class="scan-add-btn" style="flex:1">+ Add zone</button>
+                                </div>
+                                <div class="options-action-row options-zone-manage-row">
+                                    <select id="options-rename-zone-select" aria-label="Choose zone to rename">
+                                        <option value="">No zones</option>
+                                    </select>
+                                    <button id="options-rename-zone-btn" type="button" class="scan-secondary-btn">Rename zone</button>
+                                </div>
+                                <div class="options-action-row options-delete-zone-row">
+                                    <select id="options-delete-zone-select" aria-label="Choose zone to delete">
+                                        <option value="">No custom zones</option>
+                                    </select>
+                                    <button id="options-delete-zone-btn" type="button" class="scan-secondary-btn">Delete zone</button>
+                                </div>
+                            </div>
+
+                            <div id="options-pane-cloud" class="options-tab-pane" hidden>
+                                <p class="options-pane-hint">Sync your shopping list across devices in the same house.</p>
+                                <div class="cloud-sync-status-card">
+                                    <div id="options-cloud-status" class="cloud-sync-status">Local only</div>
+                                    <div id="options-cloud-detail" class="cloud-sync-detail">Create a house on one device, then invite other devices with a secure link or QR code.</div>
+                                </div>
+                                <div class="options-action-row" style="margin-top:12px">
+                                    <button id="options-open-cloud-btn" type="button" class="scan-add-btn" style="width:100%">Manage cloud sync</button>
+                                </div>
+                            </div>
+
+                            <div id="options-pane-share" class="options-tab-pane" hidden>
+                                <p class="options-pane-hint">Share the install link for this app with another device.</p>
+                                <div class="options-action-row" style="margin-top:12px">
+                                    <button id="options-share-app-btn" type="button" class="scan-secondary-btn" style="width:100%">Share app</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="options-close-btn" type="button" class="modal-cancel-btn" style="width:100%;margin-top:16px;">Close</button>
+                </div>
+            </div>
+
+            <div id="cloud-sync-modal" class="modal" hidden>
+                <div class="modal-backdrop"></div>
+                <div class="modal-content cloud-sync-content">
+                    <h3>Shared house sync</h3>
+                    <p class="cloud-sync-copy">Create a shared house on one device, then invite other devices with a secure link or QR code.</p>
+
+                    <label class="form-field">
+                        <span>House code</span>
+                        <input id="cloud-house-code" type="text" maxlength="12" placeholder="e.g. HOME42" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
+                    </label>
+
+                    <div class="cloud-sync-status-card">
+                        <div id="cloud-sync-status" class="cloud-sync-status">Local only</div>
+                        <div id="cloud-sync-detail" class="cloud-sync-detail">Create a house on one device, then invite other devices with a secure link or QR code.</div>
+                    </div>
+
+                    <div class="cloud-sync-actions-row">
+                        <button id="cloud-create-house-btn" type="button" class="scan-add-btn">Create house</button>
+                        <button id="cloud-sync-now-btn" type="button" class="scan-secondary-btn">Sync now</button>
+                    </div>
+
+                    <div class="cloud-sync-actions-row">
+                        <button id="cloud-share-invite-btn" type="button" class="scan-add-btn">Share invite</button>
+                        <button id="cloud-show-qr-btn" type="button" class="scan-secondary-btn">Show QR</button>
+                    </div>
+
+                    <div id="cloud-invite-panel" class="cloud-invite-panel" hidden>
+                        <div class="cloud-invite-qr-wrap">
+                            <canvas id="cloud-invite-qr" aria-label="Invite QR code"></canvas>
+                        </div>
+                        <p class="cloud-sync-detail" id="cloud-invite-link-text"></p>
+                        <button id="cloud-hide-qr-btn" type="button" class="scan-secondary-btn" style="width:100%;margin-top:8px;">Hide QR</button>
+                    </div>
+
+                    <div class="cloud-sync-actions-row">
+                        <button id="cloud-leave-house-btn" type="button" class="scan-secondary-btn">Leave house</button>
+                    </div>
+
+                    <p class="cloud-sync-footnote">Invites are one-time links that expire after 10 minutes. To join a house, open an invite link or scan its QR code.</p>
+
+
+                    <button id="cloud-sync-cancel-btn" type="button" class="modal-cancel-btn" style="width:100%;margin-top:12px;">Close</button>
+                </div>
+            </div>
+
+            <div id="icon-picker-modal" class="modal" hidden>
+                <div class="modal-backdrop"></div>
+                <div class="modal-content">
+                    <h3>Choose item icon</h3>
+                    <p id="icon-picker-current" class="icon-picker-current">Replacing: <span id="icon-picker-current-icon"></span> <span id="icon-picker-current-name"></span></p>
+                    <div id="icon-picker-grid" class="icon-picker-grid"></div>
+                    <button id="icon-picker-cancel" type="button" class="modal-cancel-btn">Cancel</button>
+                </div>
+            </div>
+
+            <!-- Use item modal -->
+            <div id="use-item-modal" class="modal" hidden>
+                <div class="modal-backdrop"></div>
+                <div class="modal-content">
+                    <h3>Use item</h3>
+                    <label class="form-field">
+                        <span>Select item</span>
+                        <select id="use-item-select" name="use-item-select" autocomplete="off">
+                            <option value="">Choose an item...</option>
+                        </select>
+                    </label>
+                    <div class="form-grid">
+                        <label class="form-field">
+                            <span>Use quantity</span>
+                            <select id="use-qty-input" name="use-qty-input" autocomplete="off">
+                                <option value="">No qty change</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="8">8</option>
+                                <option value="10">10</option>
+                                <option value="12">12</option>
+                                <option value="24">24</option>
+                            </select>
+                        </label>
+                        <label class="form-field">
+                            <span>Use weight/volume</span>
+                            <select id="use-weight-input" name="use-weight-input" autocomplete="off">
+                                <option value="">No weight/volume change</option>
+                                <option value="50g">50g</option>
+                                <option value="100g">100g</option>
+                                <option value="150g">150g</option>
+                                <option value="200g">200g</option>
+                                <option value="250g">250g</option>
+                                <option value="300g">300g</option>
+                                <option value="350g">350g</option>
+                                <option value="400g">400g</option>
+                                <option value="500g">500g</option>
+                                <option value="600g">600g</option>
+                                <option value="700g">700g</option>
+                                <option value="750g">750g</option>
+                                <option value="800g">800g</option>
+                                <option value="900g">900g</option>
+                                <option value="1kg">1kg</option>
+                                <option value="1.25kg">1.25kg</option>
+                                <option value="1.5kg">1.5kg</option>
+                                <option value="1.75kg">1.75kg</option>
+                                <option value="2kg">2kg</option>
+                                <option value="2.5kg">2.5kg</option>
+                                <option value="3kg">3kg</option>
+                                <option value="50ml">50ml</option>
+                                <option value="100ml">100ml</option>
+                                <option value="150ml">150ml</option>
+                                <option value="200ml">200ml</option>
+                                <option value="250ml">250ml</option>
+                                <option value="330ml">330ml</option>
+                                <option value="400ml">400ml</option>
+                                <option value="500ml">500ml</option>
+                                <option value="568ml">568ml</option>
+                                <option value="750ml">750ml</option>
+                                <option value="1 pint">1 pint</option>
+                                <option value="1.5 pints">1.5 pints</option>
+                                <option value="2 pints">2 pints</option>
+                                <option value="3 pints">3 pints</option>
+                                <option value="4 pints">4 pints</option>
+                                <option value="5 pints">5 pints</option>
+                                <option value="6 pints">6 pints</option>
+                                <option value="1L">1L</option>
+                                <option value="1.25L">1.25L</option>
+                                <option value="1.5L">1.5L</option>
+                                <option value="1.75L">1.75L</option>
+                                <option value="2L">2L</option>
+                                <option value="2.5L">2.5L</option>
+                                <option value="3L">3L</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div style="display: flex; gap: 8px; margin-top: 12px;">
+                        <button id="apply-use-btn" type="button" style="flex: 1;">Use item</button>
+                        <button id="use-item-cancel" type="button" class="modal-cancel-btn" style="flex: 0;">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Merge items modal -->
+    <div id="merge-modal" class="modal" hidden>
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <h3>Merge items</h3>
+            <p class="merge-modal-hint">Combine <strong id="merge-source-name"></strong> with another item in this zone:</p>
+            
+            <label class="form-field">
+                <span>Merge with</span>
+                <select id="merge-target-select" name="merge-target-select" autocomplete="off">
+                    <option value="">Choose an item…</option>
+                </select>
+            </label>
+
+            <div id="merge-preview" class="merge-preview" hidden>
+                <p style="font-size: .9rem; color: var(--text-muted); margin-bottom: 8px;">Preview:</p>
+                <div class="merge-preview-item">
+                    <span class="merge-preview-icon" id="merge-preview-icon">📦</span>
+                    <div class="merge-preview-text">
+                        <div class="merge-preview-name" id="merge-preview-name"></div>
+                        <div class="merge-preview-meta" id="merge-preview-meta"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 8px; margin-top: 12px;">
+                <button id="merge-confirm-btn" type="button" style="flex: 1;">Merge</button>
+                <button id="merge-cancel-btn" type="button" class="modal-cancel-btn" style="flex: 0;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Receipt scan modal -->
+    <div id="receipt-scan-modal" class="modal" hidden>
+        <div class="modal-backdrop"></div>
+        <div class="modal-content receipt-scan-content">
+            <h3>Scan Receipt</h3>
+
+            <!-- Step 1: scanning progress -->
+            <div id="scan-progress-section">
+                <div class="scan-status-icon">📄</div>
+                <p id="scan-status-text" class="scan-status-text">Reading receipt…</p>
+                <div class="scan-progress-bar"><div id="scan-progress-fill" class="scan-progress-fill"></div></div>
+            </div>
+
+            <!-- Step 2: item picker -->
+            <div id="scan-results-section" hidden>
+                <p class="scan-results-hint">Tick the items to add to this zone:</p>
+                <div id="scan-zone-selector" class="scan-zone-selector">
+                    <label for="scan-zone-select">Add to:</label>
+                    <select id="scan-zone-select" class="scan-zone-select"></select>
+                </div>
+                <div id="scan-item-list" class="scan-item-list"></div>
+                <div class="scan-results-actions">
+                    <button id="scan-select-all-btn" type="button" class="scan-secondary-btn">Select all</button>
+                    <button id="scan-add-btn" type="button" class="scan-add-btn">Add selected</button>
+                </div>
+            </div>
+
+            <!-- Step 3: no items found -->
+            <div id="scan-empty-section" hidden>
+                <p class="scan-status-text">No items found on this receipt.<br>Try a clearer photo in good light.</p>
+                <button id="scan-show-raw-btn" type="button" class="scan-secondary-btn" style="width:100%;margin-top:8px;">Show raw text</button>
+            </div>
+
+            <!-- Step 4: debug - show raw OCR output -->
+            <div id="scan-debug-section" hidden>
+                <p class="scan-results-hint">Raw text from Tesseract:</p>
+                <div id="scan-raw-text" class="scan-raw-text"></div>
+                <button id="scan-debug-close-btn" type="button" class="scan-secondary-btn" style="width:100%;margin-top:8px;">Close</button>
+            </div>
+
+            <button id="scan-cancel-btn" type="button" class="modal-cancel-btn" style="margin-top:12px;width:100%">Cancel</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/libs/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
